@@ -52,15 +52,15 @@ class Game():
             # Handle key presses
             keys = pygame.key.get_pressed()
             if keys[pygame.K_a]:
-                self.character.x_position -= properties.CHARACTER_SPEED 
+                self.character.x -= properties.CHARACTER_SPEED 
             if keys[pygame.K_d]:
-                self.character.x_position += properties.CHARACTER_SPEED 
+                self.character.x += properties.CHARACTER_SPEED 
 
 
             # Optional: Add jump mechanics
-            # if keys[pygame.K_SPACE] and self.character.y_position >= properties.SCREEN_HEIGHT - properties.FLOOR_CUBE_HEIGHT - properties.CHARACTER_HEIGHT:
+            # if keys[pygame.K_SPACE] and self.character.y >= properties.SCREEN_HEIGHT - properties.FLOOR_CUBE_HEIGHT - properties.CHARACTER_HEIGHT:
                 # Apply an upward force to simulate jumping
-                # self.character.y_position -= properties.CHARACTER_JUMP_FORCE  # You'll need to define jump_force
+                # self.character.y -= properties.CHARACTER_JUMP_FORCE  # You'll need to define jump_force
 
             # Handle key presses
             if keys[pygame.K_SPACE] and not jumping:
@@ -70,28 +70,28 @@ class Game():
 
             # Jumping (linear jump)
             if jumping:
-                self.character.y_position += jump_speed
+                self.character.y += jump_speed
                 jump_speed += properties.GRAVITY  # Apply gravity to the jump speed
 
                 # Check if the character has reached the ground
-                if self.character.y_position >= properties.SCREEN_HEIGHT - properties.FLOOR_CUBE_HEIGHT - properties.CHARACTER_HEIGHT:
-                    self.character.y_position = properties.SCREEN_HEIGHT - properties.FLOOR_CUBE_HEIGHT - properties.CHARACTER_HEIGHT
+                if self.character.y >= properties.SCREEN_HEIGHT - properties.FLOOR_CUBE_HEIGHT - properties.CHARACTER_HEIGHT:
+                    self.character.y = properties.SCREEN_HEIGHT - properties.FLOOR_CUBE_HEIGHT - properties.CHARACTER_HEIGHT
                     jumping = False
 
                     # Apply gravity to the character's vertical position
-                    self.character.y_position += properties.GRAVITY
+                    self.character.y += properties.GRAVITY
 
             
             # Boundary checks to prevent the character from going out of bounds
-            self.character.x_position = max(0, min(self.character.x_position, properties.SCREEN_WIDTH - properties.CHARACTER_WIDTH))
-            self.character.y_position = max(0, min(self.character.y_position, properties.SCREEN_HEIGHT - properties.CHARACTER_HEIGHT))
+            self.character.x = max(0, min(self.character.x, properties.SCREEN_WIDTH - properties.CHARACTER_WIDTH))
+            self.character.y = max(0, min(self.character.y, properties.SCREEN_HEIGHT - properties.CHARACTER_HEIGHT))
 
             # Check if the character is standing on the floor
-            if self.character.y_position + properties.CHARACTER_HEIGHT >= properties.SCREEN_HEIGHT - properties.FLOOR_CUBE_HEIGHT:
-                self.character.y_position = properties.SCREEN_HEIGHT - properties.FLOOR_CUBE_HEIGHT - properties.CHARACTER_HEIGHT
+            if self.character.y + properties.CHARACTER_HEIGHT >= properties.SCREEN_HEIGHT - properties.FLOOR_CUBE_HEIGHT:
+                self.character.y = properties.SCREEN_HEIGHT - properties.FLOOR_CUBE_HEIGHT - properties.CHARACTER_HEIGHT
 
             # Draw the character (a simple square)
-            pygame.draw.rect(self.screen, properties.RED, (self.character.x_position, self.character.y_position, properties.CHARACTER_WIDTH, properties.CHARACTER_HEIGHT))
+            pygame.draw.rect(self.screen, properties.RED, (self.character.x, self.character.y, properties.CHARACTER_WIDTH, properties.CHARACTER_HEIGHT))
 
 
             pygame.display.update()
