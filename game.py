@@ -9,7 +9,10 @@ class Game():
     def __init__(self):
         pygame.init()
 
-        self.screen = pygame.display.set_mode((properties.SCREEN_WIDTH,properties.SCREEN_HEIGHT))
+        screen_info = pygame.display.Info()
+
+        self.screen = pygame.display.set_mode((screen_info.current_w,screen_info.current_h))
+        
         self.clock = pygame.time.Clock()
         self.floor_image = pygame.image.load('stone.png')
         self.floor_image = pygame.transform.scale(self.floor_image, (properties.FLOOR_CUBE_WIDTH, properties.FLOOR_CUBE_HEIGHT))
@@ -54,7 +57,7 @@ class Game():
                 self.character.y = properties.SCREEN_HEIGHT - properties.FLOOR_CUBE_HEIGHT - properties.CHARACTER_HEIGHT
 
             # Draw the character (a simple square)
-            pygame.draw.rect(self.screen, properties.RED, (self.character.x, self.character.y, properties.CHARACTER_WIDTH, properties.CHARACTER_HEIGHT))
+            pygame.draw.rect (self.screen, properties.RED, (self.character.x, self.character.y, properties.CHARACTER_WIDTH, properties.CHARACTER_HEIGHT))
 
 
             pygame.display.update()
