@@ -15,7 +15,7 @@ BLUE = (0, 0, 255)
 CHARACTER_SPEED = 1
 CHARACTER_WIDTH = 50
 CHARACTER_HEIGHT = 50
-CHARACTER_JUMP_FORCE = 200
+CHARACTER_JUMP_SPEED = -20
 
 # Define jump variables
 CHARACTER_PEAK_HEIGHT = 100  # Adjust this value to control jump height
