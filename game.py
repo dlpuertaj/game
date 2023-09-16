@@ -12,12 +12,13 @@ class Game():
         screen_info = pygame.display.Info()
 
         self.screen = pygame.display.set_mode((screen_info.current_w,screen_info.current_h))
-        
+
         self.clock = pygame.time.Clock()
+
         self.floor_image = pygame.image.load('stone.png')
         self.floor_image = pygame.transform.scale(self.floor_image, (properties.FLOOR_CUBE_WIDTH, properties.FLOOR_CUBE_HEIGHT))
         self.num_copies = self.screen.get_width() // self.floor_image.get_width() + 1
-
+        
         # Create character and the initial position in screeen
         self.character = Character((properties.SCREEN_WIDTH - properties.CHARACTER_WIDTH) // 2, 
                                    properties.SCREEN_HEIGHT - properties.CHARACTER_HEIGHT - properties.FLOOR_CUBE_HEIGHT,
@@ -53,12 +54,14 @@ class Game():
             self.character.y = max(0, min(self.character.y, properties.SCREEN_HEIGHT - properties.CHARACTER_HEIGHT))
 
             # Check if the character is standing on the floor
-            if self.character.y + properties.CHARACTER_HEIGHT >= properties.SCREEN_HEIGHT - properties.FLOOR_CUBE_HEIGHT:
-                self.character.y = properties.SCREEN_HEIGHT - properties.FLOOR_CUBE_HEIGHT - properties.CHARACTER_HEIGHT
+            engine.detect_fixed_floor_colision(self.character)
+            # if self.character.y + properties.CHARACTER_HEIGHT >= properties.SCREEN_HEIGHT - properties.FLOOR_CUBE_HEIGHT:
+                # self.character.y = properties.SCREEN_HEIGHT - properties.FLOOR_CUBE_HEIGHT - properties.CHARACTER_HEIGHT
 
             # Draw the character (a simple square)
-            pygame.draw.rect (self.screen, properties.RED, (self.character.x, self.character.y, properties.CHARACTER_WIDTH, properties.CHARACTER_HEIGHT))
+            pygame.draw.rect(self.screen, properties.RED, (self.character.x, self.character.y, properties.CHARACTER_WIDTH, properties.CHARACTER_HEIGHT))
 
+            # engine.simulate_gravity(self.character)
 
             pygame.display.update()
 
