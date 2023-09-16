@@ -5,6 +5,7 @@ class Character:
     def __init__(self, x, y, width, height):
         self.x = x
         self.y = y
+        self.vertical_velocity = 0
         self.width = width
         self.height = height
         self.jumping = False
@@ -22,7 +23,6 @@ class Character:
     def jump(self):
         self.jumping = True
         self.jump_speed = properties.CHARACTER_JUMP_SPEED
-
 
     def linear_jump(self):
         # Jumping (linear jump)

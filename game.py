@@ -1,7 +1,8 @@
 import pygame
 
-import game_properties as properties
+import game_properties as prop
 import movement_engine as engine
+import graphics_engine as graphics
 from character import Character
 
 class Game():
@@ -9,40 +10,37 @@ class Game():
     def __init__(self):
         pygame.init()
 
-        screen_info = pygame.display.Info()
+        # screen_info = pygame.display.Info()
 
-        self.screen = pygame.display.set_mode((screen_info.current_w,screen_info.current_h))
+        self.screen = pygame.display.set_mode((prop.SCREEN_WIDTH, prop.SCREEN_HEIGHT))
+                                              # (screen_info.current_w,screen_info.current_h))
 
         self.clock = pygame.time.Clock()
 
-        self.floor_image = pygame.image.load('stone.png')
-        self.floor_image = pygame.transform.scale(self.floor_image, (properties.FLOOR_CUBE_WIDTH, properties.FLOOR_CUBE_HEIGHT))
-        self.num_copies = self.screen.get_width() // self.floor_image.get_width() + 1
+        self.floor_image = graphics.load_floor_image('stone.png')
         
         # Create character and the initial position in screeen
-        self.character = Character((properties.SCREEN_WIDTH - properties.CHARACTER_WIDTH) // 2, 
-                                   properties.SCREEN_HEIGHT - properties.CHARACTER_HEIGHT - properties.FLOOR_CUBE_HEIGHT,
-                                   properties.CHARACTER_WIDTH, properties.CHARACTER_HEIGHT)  
+        self.character = Character((prop.SCREEN_WIDTH - prop.CHARACTER_WIDTH) // 2, 
+                                   prop.SCREEN_HEIGHT - prop.CHARACTER_HEIGHT - prop.FLOOR_CUBE_HEIGHT,
+                                   prop.CHARACTER_WIDTH, prop.CHARACTER_HEIGHT)  
+        
 
     def run(self):
         running = True
 
         while running:
 
-            self.clock.tick(properties.FPS)
+            self.clock.tick(prop.FPS)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
 
             # Clear the screen with the background color
-            self.screen.fill(properties.BLACK)
+            self.screen.fill(prop.BLACK)
             
-            # Draw the floor
-            for i in range(self.num_copies):
-                x = i * self.floor_image.get_width()  # Calculate the x position for each copy
-                self.screen.blit(self.floor_image, (x, self.screen.get_height() - self.floor_image.get_width()))  # (x, y)
-
+            # Draw the floor rectangle using pygame.draw.rect
+            graphics.draw_floor_with_surface(self.screen, self.floor_image)
 
             # Handle key presses
             keys = pygame.key.get_pressed()
@@ -50,8 +48,8 @@ class Game():
             
             
             # Boundary checks to prevent the character from going out of bounds
-            self.character.x = max(0, min(self.character.x, properties.SCREEN_WIDTH - properties.CHARACTER_WIDTH))
-            self.character.y = max(0, min(self.character.y, properties.SCREEN_HEIGHT - properties.CHARACTER_HEIGHT))
+            self.character.x = max(0, min(self.character.x, prop.SCREEN_WIDTH - prop.CHARACTER_WIDTH))
+            self.character.y = max(0, min(self.character.y, prop.SCREEN_HEIGHT - prop.CHARACTER_HEIGHT))
 
             # Check if the character is standing on the floor
             engine.detect_fixed_floor_colision(self.character)
@@ -59,10 +57,10 @@ class Game():
                 # self.character.y = properties.SCREEN_HEIGHT - properties.FLOOR_CUBE_HEIGHT - properties.CHARACTER_HEIGHT
 
             # Draw the character (a simple square)
-            pygame.draw.rect(self.screen, properties.RED, (self.character.x, self.character.y, properties.CHARACTER_WIDTH, properties.CHARACTER_HEIGHT))
+            pygame.draw.rect(self.screen, prop.RED, (self.character.x, self.character.y, prop.CHARACTER_WIDTH, prop.CHARACTER_HEIGHT))
 
             # engine.simulate_gravity(self.character)
 
-            pygame.display.update()
+            pygame.display.flip()
 
         pygame.quit()
