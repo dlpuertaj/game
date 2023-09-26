@@ -12,55 +12,72 @@ class Game():
 
         # screen_info = pygame.display.Info()
 
-        self.screen = pygame.display.set_mode((prop.SCREEN_WIDTH, prop.SCREEN_HEIGHT))
+        self.screen = pygame.display.set_mode((prop.SCREEN_WIDTH, prop.SCREEN_HEIGHT)) # This is also a surface
                                               # (screen_info.current_w,screen_info.current_h))
 
         self.clock = pygame.time.Clock()
-
-        self.floor_image = graphics.load_floor_image('stone.png')
         
         # Create character and the initial position in screeen
-        self.character = Character((prop.SCREEN_WIDTH - prop.CHARACTER_WIDTH) // 2, 
-                                   prop.SCREEN_HEIGHT - prop.CHARACTER_HEIGHT - prop.FLOOR_CUBE_HEIGHT,
-                                   prop.CHARACTER_WIDTH, prop.CHARACTER_HEIGHT)  
+        self.character = Character((prop.CHARACTER_WIDTH // 2),0, prop.CHARACTER_WIDTH, prop.CHARACTER_HEIGHT)  
         
 
     def run(self):
         running = True
 
+        is_colliding = False 
+
         while running:
-
-            self.clock.tick(prop.FPS)
-
+            
+            # ---- Check for events ----
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
 
-            # Clear the screen with the background color
-            self.screen.fill(prop.BLACK)
-            
-            # Draw the floor rectangle using pygame.draw.rect
-            graphics.draw_floor_with_surface(self.screen, self.floor_image)
+
+            # ---- Logical Updates ----
 
             # Handle key presses
             keys = pygame.key.get_pressed()
             engine.handle_movement(keys, self.character)
             
+            # Gravity
+            if not is_colliding:
+                engine.simulate_gravity(self.character)
+                self.character.update_body_position()
             
             # Boundary checks to prevent the character from going out of bounds
             self.character.x = max(0, min(self.character.x, prop.SCREEN_WIDTH - prop.CHARACTER_WIDTH))
-            self.character.y = max(0, min(self.character.y, prop.SCREEN_HEIGHT - prop.CHARACTER_HEIGHT))
+            # self.character.y = max(0, min(self.character.y, prop.SCREEN_HEIGHT - prop.CHARACTER_HEIGHT))
+            
+            # Create the floor rectangles anf groups for collision
+            floor_objects = graphics.get_floor_objects(self.screen)
+            all_objects = []
+            all_objects.append(self.character)
+            
+            floor_group = pygame.sprite.Group(floor_objects)
+            all_objects_group = pygame.sprite.Group(all_objects)
+            
+            # spritecollide for collision using groups
+            colliding = pygame.sprite.spritecollide(self.character, floor_group, False)
 
-            # Check if the character is standing on the floor
-            engine.detect_fixed_floor_colision(self.character)
-            # if self.character.y + properties.CHARACTER_HEIGHT >= properties.SCREEN_HEIGHT - properties.FLOOR_CUBE_HEIGHT:
-                # self.character.y = properties.SCREEN_HEIGHT - properties.FLOOR_CUBE_HEIGHT - properties.CHARACTER_HEIGHT
-
+            if len(colliding) > 0:
+                is_colliding = True
+            else:
+                is_colliding = False
+                
+                                    
+            # ---- Fill the screen 
+            # Clear the screen with the background color
+            self.screen.fill(prop.WHITE)
+                      
             # Draw the character (a simple square)
-            pygame.draw.rect(self.screen, prop.RED, (self.character.x, self.character.y, prop.CHARACTER_WIDTH, prop.CHARACTER_HEIGHT))
+            #pygame.draw.rect(self.screen, prop.RED, self.character.rect)
 
-            # engine.simulate_gravity(self.character)
-
-            pygame.display.flip()
+            # Draw floor
+            floor_group.draw(self.screen)
+            all_objects_group.draw(self.screen)
+           
+            pygame.display.update()
+            self.clock.tick(prop.FPS)
 
         pygame.quit()
