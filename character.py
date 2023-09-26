@@ -1,14 +1,18 @@
+import pygame
 import game_properties as properties
 
-class Character:
+class Character(pygame.sprite.Sprite):
 
     def __init__(self, x, y, width, height):
+        super().__init__()
         self.x = x
         self.y = y
+        self.vertical_velocity = 0
         self.width = width
         self.height = height
-        self.jumping = False
-        self.jump_speed = 0
+        self.image = pygame.Surface((width,height))
+        self.rect = pygame.Rect(x, y, width, height)
+        # self.rect.center = self.get_position()
 
     def get_position(self):
         return (self.x,self.y)
@@ -19,20 +23,7 @@ class Character:
     def move_right(self):
         self.x += properties.CHARACTER_SPEED
 
-    def jump(self):
-        self.jumping = True
-        self.jump_speed = properties.CHARACTER_JUMP_SPEED
-
-
-    def linear_jump(self):
-        # Jumping (linear jump)
-        if self.jumping:
-            self.y += self.jump_speed
-            self.jump_speed += properties.GRAVITY  # Apply gravity to the jump speed
-        # Check if the character has reached the ground
-        if self.y >= properties.SCREEN_HEIGHT - properties.FLOOR_CUBE_HEIGHT - properties.CHARACTER_HEIGHT:
-            self.y = properties.SCREEN_HEIGHT - properties.FLOOR_CUBE_HEIGHT - properties.CHARACTER_HEIGHT
-            self.jumping = False
-
-            # Apply gravity to the character's vertical position
-            self.y += properties.GRAVITY
+    def update_body_position(self):
+        self.image = pygame.Surface((self.width,self.height))
+        self.image.fill(properties.BLUE)
+        self.rect.center = (self.x, self.y)
