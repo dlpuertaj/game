@@ -1,29 +1,43 @@
 import pygame
-import game_properties as properties
+import game_properties as prop
 
 class Character(pygame.sprite.Sprite):
 
-    def __init__(self, x, y, width, height):
+    def __init__(self,x, y, width, height):
         super().__init__()
-        self.x = x
-        self.y = y
-        self.vertical_velocity = 0
         self.width = width
         self.height = height
-        self.image = pygame.Surface((width,height))
-        self.rect = pygame.Rect(x, y, width, height)
-        # self.rect.center = self.get_position()
+        self.surface = pygame.Surface((width,height))
+        self.surface.fill(prop.RED)
+        self.rect = self.surface.get_rect()
 
-    def get_position(self):
-        return (self.x,self.y)
-    
-    def move_left(self):
-        self.x -= properties.CHARACTER_SPEED
-    
-    def move_right(self):
-        self.x += properties.CHARACTER_SPEED
+        # Vectors
+        self.position = pygame.math.Vector2((x, y))
+        self.velocity = pygame.math.Vector2(0, 0)
+        self.acceleration = pygame.math.Vector2(0, 0)
 
-    def update_body_position(self):
+
+    def move(self, keys):
+        self.acceleration = pygame.math.Vector2(0,0)
+        if keys[pygame.K_LEFT]:
+            self.acceleration.x = -prop.ACCELERATION
+        if keys[pygame.K_RIGHT]:
+            self.acceleration.x = prop.ACCELERATION
+
+        self.acceleration.x += self.velocity.x * prop.FRICTION
+        self.velocity += self.acceleration
+        self.position += self.velocity + 0.5 * self.acceleration
+
+        """
+        if self.position.x > screen.WIDTH:
+            self.position.x = 0
+        if self.position.x < 0:
+            self.position.x = screen.WIDTH
+        """
+
+        self.rect.midbottom = self.position
+
+    """def update_body_position(self):
         self.image = pygame.Surface((self.width,self.height))
-        self.image.fill(properties.BLUE)
-        self.rect.center = (self.x, self.y)
+        self.image.fill(prop.BLUE)
+        self.rect.center = (self.x, self.y)"""
