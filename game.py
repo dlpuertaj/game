@@ -41,25 +41,20 @@ class Game():
             self.character.move(keys)
             
             # Create the floor rectangles anf groups for collision
-            floor_objects = graphics.get_floor_objects(self.screen)
-            all_objects = []
-            all_objects.append(self.character)
+            floor_objects = graphics.get_floor_objects(self.screen) 
             
             floor_group = pygame.sprite.Group(floor_objects)
-            all_objects_group = pygame.sprite.Group(all_objects)
 
             # spritecollide for collision using groups
-            # colliding = pygame.sprite.spritecollide(self.character, floor_group, False)
+            colliding = pygame.sprite.spritecollide(self.character, floor_group, False)
             
-            # if len(colliding) > 0:
-                # is_colliding = True
-            # else:
-                # is_colliding = False
+            if len(colliding) > 0:
+                self.character.position.y = colliding[0].rect.top + 1
+                self.character.velocity.y = 0
+                self.character.surface.fill(prop.BLUE)
+            else:
+                self.character.velocity.y = prop.GRAVITY
 
-            # Gravity
-            # if not is_colliding:
-                # engine.simulate_gravity(self.character)
-                # self.character.update_body_position()
             
             # Boundary checks to prevent the character from going out of bounds
             # self.character.x = max(0, min(self.character.x, prop.SCREEN_WIDTH - prop.CHARACTER_WIDTH))
@@ -77,8 +72,8 @@ class Game():
             # Draw floor
             floor_group.draw(self.screen)
             # all_objects_group.draw(self.screen)
-            for entity in all_objects_group:
-                self.screen.blit(entity.surface, entity.rect)
+            
+            self.screen.blit(self.character.surface, self.character.rect)
            
             pygame.display.update()
             self.clock.tick(prop.FPS)

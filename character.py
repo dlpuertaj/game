@@ -12,14 +12,13 @@ class Character(pygame.sprite.Sprite):
         self.rect = self.surface.get_rect()
 
         # Vectors
-        self.position = pygame.math.Vector2((50, 150))
+        self.position = pygame.math.Vector2((x, y))
         self.velocity = pygame.math.Vector2(0, 0)
-        self.acceleration = pygame.Vector2(0, 0)
+        self.acceleration = pygame.math.Vector2(0, 0)
 
 
     def move(self, keys):
         self.acceleration = pygame.math.Vector2(0,0)
-
         if keys[pygame.K_LEFT]:
             self.acceleration.x = -prop.ACCELERATION
         if keys[pygame.K_RIGHT]:
