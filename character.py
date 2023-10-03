@@ -13,7 +13,7 @@ class Character(pygame.sprite.Sprite):
 
         # Vectors
         self.position = pygame.math.Vector2((x, y))
-        self.velocity = pygame.math.Vector2(0, 0)
+        self.velocity = pygame.math.Vector2(0, prop.GRAVITY)
         self.acceleration = pygame.math.Vector2(0, 0)
 
 
@@ -28,16 +28,8 @@ class Character(pygame.sprite.Sprite):
         self.velocity += self.acceleration
         self.position += self.velocity + 0.5 * self.acceleration
 
-        """
-        if self.position.x > screen.WIDTH:
-            self.position.x = 0
-        if self.position.x < 0:
-            self.position.x = screen.WIDTH
-        """
-
         self.rect.midbottom = self.position
 
-    """def update_body_position(self):
-        self.image = pygame.Surface((self.width,self.height))
-        self.image.fill(prop.BLUE)
-        self.rect.center = (self.x, self.y)"""
+    def jump(self):
+        self.velocity.y = prop.CHARACTER_JUMP_FORCE
+

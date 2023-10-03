@@ -16,6 +16,8 @@ class Game():
                                               # (screen_info.current_w,screen_info.current_h))
 
         self.clock = pygame.time.Clock()
+
+        self.floor_cubes = graphics.get_floor_objects(self.screen)
         
         # Create character and the initial position in screeen
         self.character = Character((prop.CHARACTER_WIDTH // 2),prop.CHARACTER_WIDTH, prop.CHARACTER_WIDTH, prop.CHARACTER_HEIGHT)  
@@ -34,6 +36,10 @@ class Game():
                 if event.type == pygame.QUIT:
                     running = False
 
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE and len(collisions) > 0:
+                        self.character.jump()
+
             # ---- Logical Updates ----
 
             # Handle key presses
@@ -41,26 +47,20 @@ class Game():
             self.character.move(keys)
             
             # Create the floor rectangles anf groups for collision
-            floor_objects = graphics.get_floor_objects(self.screen) 
+             
             
-            floor_group = pygame.sprite.Group(floor_objects)
+            floor_group = pygame.sprite.Group(self.floor_cubes)
 
             # spritecollide for collision using groups
-            colliding = pygame.sprite.spritecollide(self.character, floor_group, False)
+            collisions = pygame.sprite.spritecollide(self.character, floor_group, False)
             
-            if len(colliding) > 0:
-                self.character.position.y = colliding[0].rect.top + 1
-                self.character.velocity.y = 0
-                self.character.surface.fill(prop.BLUE)
-            else:
-                self.character.velocity.y = prop.GRAVITY
+            if self.character.velocity.y > 0:
+                if len(collisions) > 0:
+                    self.character.velocity.y = 0
+                    self.character.position.y = collisions[0].rect.top + 1                
 
-            
-            # Boundary checks to prevent the character from going out of bounds
-            # self.character.x = max(0, min(self.character.x, prop.SCREEN_WIDTH - prop.CHARACTER_WIDTH))
-            # self.character.y = max(0, min(self.character.y, prop.SCREEN_HEIGHT - prop.CHARACTER_HEIGHT))
-            
-                                    
+            self.character.velocity.y += prop.GRAVITY
+
             # ---- Fill the screen ----
 
             # Clear the screen with the background color
