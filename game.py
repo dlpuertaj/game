@@ -1,4 +1,5 @@
 import pygame
+from background import Background
 
 import game_properties as prop
 import movement_engine as engine
@@ -14,6 +15,8 @@ class Game():
 
         self.screen = pygame.display.set_mode((prop.SCREEN_WIDTH, prop.SCREEN_HEIGHT)) # This is also a surface
                                               # (screen_info.current_w,screen_info.current_h))
+
+        self.background = Background()
 
         self.clock = pygame.time.Clock()
 
@@ -42,13 +45,11 @@ class Game():
 
             # ---- Logical Updates ----
 
+
             # Handle key presses
-            keys = pygame.key.get_pressed()
-            self.character.move(keys)
+            self.character.move()
             
             # Create the floor rectangles anf groups for collision
-             
-            
             floor_group = pygame.sprite.Group(self.floor_cubes)
 
             # spritecollide for collision using groups
@@ -66,6 +67,8 @@ class Game():
             # Clear the screen with the background color
             self.screen.fill(prop.WHITE)
                       
+            self.background.update()
+            self.background.render(self.screen)
             # Draw the character (a simple square)
             #pygame.draw.rect(self.screen, prop.RED, self.character.rect)
 
