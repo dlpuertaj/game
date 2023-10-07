@@ -19,14 +19,15 @@ def get_floor(screen, floor_image):
     
     return list
 
-def get_floor_objects(screen):
-    num_copies = screen.get_width() // prop.FLOOR_CUBE_WIDTH + 1
-    list = []
-    for i in range(num_copies):
+def get_floor_objects():
+    num_copies = prop.SCREEN_WIDTH // prop.FLOOR_CUBE_WIDTH + 1
+    group = pygame.sprite.Group()
+    for i in range(-1,num_copies + 1):
+        color = prop.BLACK if x % (2 * prop.FLOOR_CUBE_WIDTHE) == 0 else prop.GREEN
         x = i * prop.FLOOR_CUBE_WIDTH  # Calculate the x position for each copy
-        y = screen.get_height() - (prop.FLOOR_CUBE_HEIGHT // 2)
-        block = Block(x, y, prop.FLOOR_CUBE_WIDTH)
-        list.append(block)
+        y = prop.FLOOR_CUBE_Y_POSITION
+        block = Block(x, y, color)
+        group.add(block)
     
-    return list
+    return group
 

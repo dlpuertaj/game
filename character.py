@@ -13,7 +13,7 @@ class Character(pygame.sprite.Sprite):
 
         # Vectors
         self.position = pygame.math.Vector2((x, y))
-        self.velocity = pygame.math.Vector2(prop.CHARACTER_SPEED, prop.GRAVITY)
+        self.velocity = pygame.math.Vector2(0, prop.GRAVITY)
         self.acceleration = pygame.math.Vector2(0, 0)
 
 
