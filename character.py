@@ -10,6 +10,7 @@ class Character(pygame.sprite.Sprite):
         self.surface = pygame.Surface((width,height))
         self.surface.fill(prop.RED)
         self.rect = self.surface.get_rect()
+        self.rect.center = (x,y)
 
         # Vectors
         self.position = pygame.math.Vector2((x, y))

@@ -12,7 +12,7 @@ class Block(pygame.sprite.Sprite):
         self.image, self.rect = self.get_block(self.size,color)
 
     def get_block(self, size, color):
-        image = pygame.Sprite()# image.load(image_filename).convert_alpha()
+        image = pygame.Surface((size, size)) # image.load(image_filename).convert_alpha()
         image = pygame.transform.scale(image, (size, size)) 
         image.fill(color)
         rect = image.get_rect()
