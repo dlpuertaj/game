@@ -1,17 +1,20 @@
 import pygame
 
+import game_properties as prop
+
 
 class Block(pygame.sprite.Sprite):
-    def __init__(self, x_position, y_position, size): # for now it will be a square
+    def __init__(self, x_position, y_position, color): # for now it will be a square
         super().__init__()
         self.x = x_position
         self.y = y_position
-        self.size = size
-        self.image, self.rect = self.get_block(size,"Stone.png")
+        self.size = prop.FLOOR_CUBE_WIDTH
+        self.image, self.rect = self.get_block(self.size,color)
 
-    def get_block(self, size, image_filename):
-        image = pygame.image.load(image_filename).convert_alpha()
+    def get_block(self, size, color):
+        image = pygame.Surface((size, size)) # image.load(image_filename).convert_alpha()
         image = pygame.transform.scale(image, (size, size)) 
+        image.fill(color)
         rect = image.get_rect()
         rect.center = (self.x, self.y)
         return image, rect
